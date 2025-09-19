@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- CAMBIAR: título de la pestaña según la semana -->
+  <title>Semana 2 - Diseño</title>
+
+  <link rel="stylesheet" href="body.css" />
+</head>
+<body>
+  <div class="semana-container">
+    <div class="semana-header">
+      <!-- CAMBIAR: href si quieres volver a otra página (index.html o tareas.html) -->
+      <a href="tareas.html" class="back-button">← Volver a tareas</a>
+
+      <!-- CAMBIAR: encabezado principal (número y tema) -->
+      <h1>📝 Semana 2 - Diseño</h1>
+      <!-- CAMBIAR: descripción breve de la semana -->
+      <p>Sube y gestiona tu trabajo de esta semana</p>
+    </div>
+
+    <div class="upload-section">
+      <h2>Subir Trabajo</h2>
+
+      <!-- Si copias esta plantilla para otra semana, guarda como semanaX.html -->
+      <form class="upload-form" id="uploadForm">
+        <div class="file-input-wrapper">
+          <div class="file-input-button">📁 Seleccionar Archivo</div>
+
+          <!-- 
+            NOTA: puedes mantener el mismo id en cada página porque cada archivo HTML
+            se abre por separado. Si pasas la lógica a un JS compartido en varias páginas
+            abiertas a la vez, considera usar IDs únicos por semana (ej: fileInput2).
+          -->
+          <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx" />
+        </div>
+
+        <!-- CAMBIAR: el texto del botón si quieres otro nombre -->
+        <button type="button" onclick="subirArchivo()">📤 Subir Trabajo</button>
+      </form>
+    </div>
+
+    <!-- Vista previa: se muestra cuando subes un archivo -->
+    <div class="work-preview" id="workPreview" style="display: none;">
+      <h2>Trabajo Subido</h2>
+
+      <!-- Preview: si es imagen muestra la imagen, si no muestra un icono -->
+      <img id="previewImage" class="preview-image" alt="Vista previa del trabajo" />
+
+      <div class="file-info">
+        <div class="file-name" id="fileName"></div>
+        <div class="file-size" id="fileSize"></div>
+      </div>
+
+      <button onclick="eliminarArchivo()" style="margin-top: 15px;">🗑️ Eliminar Archivo</button>
+    </div>
+  </div>
+
+  <script>
+    // -----------------------------
+    // FUNCIONES: subir / eliminar
+    // -----------------------------
+    // Si copias esta página para otra semana, NO es necesario cambiar estas funciones
+    // a menos que uses un JS global para todas las páginas. En ese caso usa IDs dinámicos.
+    function subirArchivo() {
+      const fileInput = document.getElementById('fileInput');       // <-- ID del input
+      const workPreview = document.getElementById('workPreview');   // <-- contenedor preview
+      const previewImage = document.getElementById('previewImage');
+      const fileName = document.getElementById('fileName');
+      const fileSize = document.getElementById('fileSize');
+      
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const fileURL = URL.createObjectURL(file);
+        
+        // Mostrar información del archivo
+        fileName.textContent = file.name;
+        fileSize.textContent = `Tamaño: ${(file.size / 1024).toFixed(2)} KB`;
+        
+        // Mostrar preview según tipo de archivo
+        if (file.type.startsWith('image/')) {
+          previewImage.src = fileURL;
+          previewImage.style.display = 'block';
+        } else if (file.type === 'application/pdf') {
+          // icono para pdf (si quieres, cambia la URL por otro icono)
+          previewImage.src = 'https://cdn-icons-png.flaticon.com/512/337/337946.png';
+          previewImage.style.display = 'block';
+        } else {
+          // icono genérico para otros documentos
+          previewImage.src = 'https://cdn-icons-png.flaticon.com/512/109/109612.png';
+          previewImage.style.display = 'block';
+        }
+        
+        workPreview.style.display = 'block';
+        alert('✅ Archivo subido correctamente');
+      } else {
+        alert('⚠️ Por favor selecciona un archivo');
+      }
+    }
+    
+    function eliminarArchivo() {
+      const fileInput = document.getElementById('fileInput');
+      const workPreview = document.getElementById('workPreview');
+      
+      fileInput.value = '';
+      workPreview.style.display = 'none';
+      alert('🗑️ Archivo eliminado');
+    }
+
+    // -----------------------------
+    // (Opcional) Trigger visual en el selector
+    // -----------------------------
+    // Esto hace que al pulsar el div .file-input-button se abra el selector real.
+    document.addEventListener('DOMContentLoaded', () => {
+      const button = document.querySelector('.file-input-button');
+      const input = document.querySelector('#fileInput');
+      if (button && input) {
+        button.addEventListener('click', () => input.click());
+      }
+    });
+  </script>
+</body>
+</html>
