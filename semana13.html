@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- 🔹 CAMBIAR EL TÍTULO CON EL NOMBRE DE LA SEMANA -->
+  <title>Semana 13 - Aprendizaje</title>
+  <link rel="stylesheet" href="body.css" />
+</head>
+<body>
+   <!-- NOMBRE FIJO ARRIBA A LA DERECHA -->
+   <div class="user-name">Samuel Max Vega Brañez</div>
+  <div class="semana-container">
+    <div class="semana-header">
+      <!-- 🔹 AHORA REGRESA A tareas.html -->
+      <a href="tareas.html" class="back-button">← Volver a Tareas</a>
+      <!-- 🔹 CAMBIAR ICONO Y TEXTO -->
+      <h1>🎓 Semana 13 - Aprendizaje</h1>
+      <p>Sube y gestiona tu trabajo de esta semana</p>
+    </div>
+
+    <div class="upload-section">
+      <h2>Subir Trabajo</h2>
+      <form class="upload-form" id="uploadForm">
+        <div class="file-input-wrapper">
+          <div class="file-input-button">📁 Seleccionar Archivo</div>
+          <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx" />
+        </div>
+        <button type="button" onclick="subirArchivo()">📤 Subir Trabajo</button>
+      </form>
+    </div>
+
+    <div class="work-preview" id="workPreview" style="display: none;">
+      <h2>Trabajo Subido</h2>
+      <img id="previewImage" class="preview-image" alt="Vista previa del trabajo" />
+      <div class="file-info">
+        <div class="file-name" id="fileName"></div>
+        <div class="file-size" id="fileSize"></div>
+      </div>
+      <button onclick="eliminarArchivo()" style="margin-top: 15px;">🗑️ Eliminar Archivo</button>
+    </div>
+  </div>
+
+  <script>
+    function subirArchivo() {
+      const fileInput = document.getElementById('fileInput');
+      const workPreview = document.getElementById('workPreview');
+      const previewImage = document.getElementById('previewImage');
+      const fileName = document.getElementById('fileName');
+      const fileSize = document.getElementById('fileSize');
+      
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const fileURL = URL.createObjectURL(file);
+        
+        // Mostrar información del archivo
+        fileName.textContent = file.name;
+        fileSize.textContent = `Tamaño: ${(file.size / 1024).toFixed(2)} KB`;
+        
+        // Mostrar preview según tipo de archivo
+        if (file.type.startsWith('image/')) {
+          previewImage.src = fileURL;
+          previewImage.style.display = 'block';
+        } else {
+          previewImage.src = 'https://cdn-icons-png.flaticon.com/512/109/109612.png';
+          previewImage.style.display = 'block';
+        }
+        
+        workPreview.style.display = 'block';
+        alert('✅ Archivo subido correctamente');
+      } else {
+        alert('⚠️ Por favor selecciona un archivo');
+      }
+    }
+    
+    function eliminarArchivo() {
+      const fileInput = document.getElementById('fileInput');
+      const workPreview = document.getElementById('workPreview');
+      
+      fileInput.value = '';
+      workPreview.style.display = 'none';
+      alert('🗑️ Archivo eliminado');
+    }
+  </script>
+</body>
+</html>
