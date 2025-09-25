@@ -12,7 +12,7 @@
     }
 
     header img {
-      max-width: 120px; /* 🔧 Ajusta tamaño del logo */
+      max-width: 120px;
       margin-bottom: 15px;
     }
 
@@ -26,6 +26,18 @@
       opacity: 0.85;
     }
 
+    /* 🔹 Nombre arriba a la derecha */
+    .nombre-usuario {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+
     footer {
       margin-top: 50px;
       text-align: center;
@@ -33,11 +45,47 @@
       opacity: 0.8;
       color: #eee;
     }
+
+    /* 🔹 Grid de tarjetas */
+    .presentacion-grid {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .presentacion-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+      transition: 0.3s;
+      width: 120px;
+    }
+
+    .presentacion-card:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .presentacion-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .presentacion-title {
+      font-size: 1.2rem;
+    }
   </style>
 </head>
 <body>
+  <!-- 🔹 Nombre fijo arriba a la derecha -->
+  <div class="nombre-usuario">Samuel Vega</div>
+
   <header>
-    <!-- 🔧 Cambia "lupla.png" por tu logo real -->
     <img src="lupla.png" alt="Logo oficial de UPLA">
     <h1>📚 Mi Portafolio de Trabajos</h1>
     <p>Bienvenido a mi portafolio. Aquí encontrarás una breve descripción de mis trabajos realizados durante el curso.</p>
@@ -45,16 +93,16 @@
 
   <main>
     <div class="presentacion-grid">
-      <!-- 🚪 Botón de salida -->
-      <a href="login.html" class="presentacion-card" aria-label="Cerrar sesión">
-        <div class="presentacion-icon">🚪</div>
-        <div class="presentacion-title">Salir</div>
+      <!-- 🔑 Botón de login -->
+      <a href="login.html" class="presentacion-card" aria-label="Ir al login">
+        <div class="presentacion-icon">🔑</div>
+        <div class="presentacion-title">Login</div>
       </a>      
 
-      <!-- 🗂️ Botón de tareas -->
-      <a href="tareas.html" class="presentacion-card" aria-label="Página de tareas">
-        <div class="presentacion-icon">🗂️</div>
-        <div class="presentacion-title">Tareas</div>
+      <!-- 👤 Botón de perfil -->
+      <a href="perfil.html" class="presentacion-card" aria-label="Ir al perfil">
+        <div class="presentacion-icon">👤</div>
+        <div class="presentacion-title">Perfil</div>
       </a>
     </div>
 

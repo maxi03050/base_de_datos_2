@@ -270,3 +270,16 @@ header p {
     font-size: 1rem;
   }
 }
+/* Nombre del usuario arriba a la derecha */
+.user-name {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  background: #f9f9f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
