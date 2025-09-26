@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
   const semanasContainer = document.getElementById("semanasContainer");
   if (!semanasContainer) return; // Solo corre en tareas.html
 

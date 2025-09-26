@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test Supabase</title>
+</head>
+<body>
+  <h1>📂 Prueba de Subida a Supabase</h1>
+
+  <input type="file" id="fileInput" />
+  <button onclick="subirArchivo()">Subir</button>
+
+  <p id="status"></p>
+  <a id="downloadLink" href="#" target="_blank" style="display:none;">⬇️ Descargar archivo</a>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    // Configuración de tu proyecto Supabase
+    const supabase = createClient(
+      "https://sxxayzbfdrxxfrltdirb.supabase.co", // tu URL
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4eGF5emJmZHJ4eGZybHRkaXJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4Mzk2OTMsImV4cCI6MjA3NDQxNTY5M30.xi675-BzW7SQUFhD_5QN0-lLNsnQyF2_FU6lYXB9fqw" // anon key
+    );
+
+    async function subirArchivo() {
+      const fileInput = document.getElementById("fileInput");
+      const status = document.getElementById("status");
+      const downloadLink = document.getElementById("downloadLink");
+
+      if (fileInput.files.length === 0) {
+        alert("⚠️ Selecciona un archivo primero");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const filePath = `test/${Date.now()}-${file.name}`;
+
+      // Subir archivo
+      const { data, error } = await supabase.storage
+        .from("trabajos") // nombre de tu bucket
+        .upload(filePath, file);
+
+      if (error) {
+        console.error(error);
+        status.textContent = "❌ Error al subir: " + error.message;
+      } else {
+        status.textContent = "✅ Archivo subido correctamente";
+
+        // Obtener URL pública
+        const { data: publicURL } = supabase.storage
+          .from("trabajos")
+          .getPublicUrl(filePath);
+
+        downloadLink.href = publicURL.publicUrl;
+        downloadLink.style.display = "block";
+      }
+    }
+
+    window.subirArchivo = subirArchivo;
+  </script>
+</body>
+</html>
