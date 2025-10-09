@@ -1,0 +1,358 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Semana 10 - Brillantez</title> <!-- 🔹 CAMBIADO -->
+  <style>
+    /* --- ESTILOS GENERALES --- */
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      /* degradado nuevo (continuando con cambios de color) */
+      background: linear-gradient(135deg, #f6d365, #fda085);
+      color: #2c3e50;
+    }
+
+    .user-name {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.9);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+
+    .semana-container {
+      max-width: 900px;
+      margin: 70px auto;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      animation: fadeIn 0.7s ease;
+      color: #2c3e50;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .semana-header h1 {
+      margin: 0;
+      font-size: 30px;
+      color: #333;
+    }
+
+    .semana-header p {
+      color: #444;
+      margin-bottom: 25px;
+    }
+
+    .back-button {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 20px;
+      transition: color 0.2s;
+    }
+    .back-button:hover { color: #000; }
+
+    /* --- BOTONES Y FORMULARIO --- */
+    .file-input-button {
+      background: #ff7a59;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      display: inline-block;
+      transition: transform 0.12s, box-shadow 0.12s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .file-input-button:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }
+
+    input[type="file"] { display: none; }
+
+    button {
+      border: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.12s;
+      color: #fff;
+    }
+
+    .upload-btn { background: #2ecc71; }
+    .upload-btn:hover { background: #27ae60; transform: translateY(-2px); }
+
+    .delete-btn { background: #e74c3c; }
+    .delete-btn:hover { background: #c0392b; transform: translateY(-2px); }
+
+    .download-btn {
+      background: #8e44ad;
+      text-decoration: none;
+      display: inline-block;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      color: #fff;
+    }
+    .download-btn:hover { background: #6c3483; }
+
+    #status {
+      font-weight: 600;
+      margin-top: 10px;
+      color: #2c3e50;
+    }
+
+    /* --- LISTA DE ARCHIVOS --- */
+    .work-list {
+      border-top: 2px solid rgba(0,0,0,0.05);
+      padding-top: 20px;
+      margin-top: 25px;
+    }
+
+    .file-card {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.9);
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      gap: 15px;
+    }
+
+    .preview-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: #fff;
+    }
+
+    .file-info {
+      flex: 1;
+    }
+
+    .file-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: #2c3e50;
+    }
+
+    .file-size {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    #selectedFile {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #e65c3c;
+      font-style: italic;
+    }
+
+    /* responsive */
+    @media (max-width: 640px) {
+      .semana-container { padding: 18px; margin: 40px 12px; }
+      .file-card { flex-direction: column; align-items: stretch; }
+      .action-buttons { justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+   <div class="user-name">Samuel Max Vega Brañez</div>
+
+   <div class="semana-container">
+    <div class="semana-header">
+      <a href="tareas.html" class="back-button">← Volver a Tareas</a>
+      <h1>🌟 Semana 10 - Brillantez</h1> <!-- ICONO CORREGIDO -->
+      <p>Sube y gestiona tu trabajo de esta semana</p>
+    </div>
+
+    <!-- SUBIR ARCHIVO -->
+    <div class="upload-section">
+      <h2>Subir Trabajo</h2>
+      <form class="upload-form" id="uploadForm">
+        <div class="file-input-wrapper">
+          <label class="file-input-button">
+            📁 Seleccionar Archivo
+            <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx" />
+          </label>
+          <div id="selectedFile">Ningún archivo seleccionado</div>
+        </div>
+        <button type="button" class="upload-btn" onclick="subirArchivo()">📤 Subir Trabajo</button>
+      </form>
+      <p id="status"></p>
+    </div>
+
+    <!-- LISTA DE ARCHIVOS -->
+    <div class="work-list" id="workList">
+      <h2>📂 Archivos Subidos</h2>
+      <div id="fileCards"></div>
+    </div>
+  </div>
+
+  <!-- SUPABASE -->
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    // usa la misma URL/KEY de siempre
+    const supabase = createClient(
+      "https://sxxayzbfdrxxfrltdirb.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    );
+
+    let archivos = [];
+
+    // Mostrar nombre de archivo al seleccionarlo
+    document.getElementById("fileInput").addEventListener("change", (e) => {
+      const selectedFile = document.getElementById("selectedFile");
+      if (e.target.files.length > 0) {
+        selectedFile.textContent = `📄 ${e.target.files[0].name}`;
+      } else {
+        selectedFile.textContent = "Ningún archivo seleccionado";
+      }
+    });
+
+    // SUBIR ARCHIVO
+    async function subirArchivo() {
+      const fileInput = document.getElementById("fileInput");
+      const status = document.getElementById("status");
+
+      if (!fileInput.files.length) {
+        alert("⚠️ Selecciona un archivo primero");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const filePath = `entregas/${Date.now()}-${file.name}`;
+
+      status.textContent = "⏳ Subiendo...";
+
+      const { error: uploadError } = await supabase.storage
+        .from("trabajos")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        status.textContent = "❌ Error: " + uploadError.message;
+        return;
+      }
+
+      const { data: publicURL } = supabase.storage
+        .from("trabajos")
+        .getPublicUrl(filePath);
+
+      const { data, error: dbError } = await supabase
+        .from("archivos")
+        .insert([{ 
+          nombre: file.name, 
+          ruta: filePath, 
+          url: publicURL.publicUrl, 
+          semana: "Semana 10"  // 🔹 CAMBIADO
+        }])
+        .select();
+
+      if (dbError) {
+        status.textContent = "❌ Error guardando en base de datos";
+        return;
+      }
+
+      status.textContent = "✅ Archivo subido correctamente";
+      fileInput.value = ""; 
+      document.getElementById("selectedFile").textContent = "Ningún archivo seleccionado";
+      cargarArchivos();
+    }
+
+    // LISTAR ARCHIVOS
+    async function cargarArchivos() {
+      const { data } = await supabase
+        .from("archivos")
+        .select("*")
+        .eq("semana", "Semana 10") // 🔹 CAMBIADO
+        .order("subido_en", { ascending: false });
+
+      archivos = data || [];
+      mostrarArchivos();
+    }
+
+    function mostrarArchivos() {
+      const container = document.getElementById("fileCards");
+      container.innerHTML = "";
+
+      archivos.forEach((archivo) => {
+        const div = document.createElement("div");
+        div.className = "file-card";
+
+        // preview
+        const img = document.createElement("img");
+        img.className = "preview-image";
+        if (archivo.url && archivo.url.match(/\.(jpg|jpeg|png)$/i)) {
+          img.src = archivo.url;
+        } else {
+          img.src = "https://cdn-icons-png.flaticon.com/512/109/109612.png";
+        }
+
+        // info
+        const info = document.createElement("div");
+        info.className = "file-info";
+        info.innerHTML = `
+          <div class="file-name">${archivo.nombre}</div>
+          <div class="file-size">${archivo.size ? (archivo.size/1024).toFixed(2)+" KB" : ""}</div>
+        `;
+
+        // botones
+        const buttons = document.createElement("div");
+        buttons.className = "action-buttons";
+
+        const download = document.createElement("a");
+        download.className = "download-btn";
+        download.href = archivo.url;
+        download.target = "_blank";
+        download.textContent = "⬇️ Descargar";
+
+        const del = document.createElement("button");
+        del.className = "delete-btn";
+        del.textContent = "🗑️ Borrar";
+        del.onclick = async () => {
+          if (!confirm("⚠️ ¿Seguro que deseas eliminar este archivo?")) return;
+          await supabase.storage.from("trabajos").remove([archivo.ruta]);
+          await supabase.from("archivos").delete().eq("id", archivo.id);
+          cargarArchivos();
+          document.getElementById("status").textContent = "✅ Archivo eliminado correctamente";
+        };
+
+        buttons.appendChild(download);
+        buttons.appendChild(del);
+
+        div.appendChild(img);
+        div.appendChild(info);
+        div.appendChild(buttons);
+
+        container.appendChild(div);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", cargarArchivos);
+
+    window.subirArchivo = subirArchivo;
+  </script>
+</body>
+</html>

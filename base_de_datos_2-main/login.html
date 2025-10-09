@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Mis Tareas</title>
+  <link rel="stylesheet" href="body.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #005baa, #00a2ff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .login-container img {
+      width: 90px;
+      margin-bottom: 15px;
+    }
+
+    .login-container h1 {
+      margin-bottom: 25px;
+      font-size: 1.8em;
+      color: #333;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      outline: none;
+      font-size: 1em;
+      transition: 0.3s;
+    }
+
+    .login-container input:focus {
+      border-color: #005baa;
+      box-shadow: 0 0 6px rgba(0,91,170,0.4);
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: #005baa;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-container button:hover {
+      background: #004080;
+    }
+
+    .error-msg {
+      color: #d9534f;
+      font-size: 0.9em;
+      margin-top: 10px;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <img src="lupla.png" alt="Logo Universidad">
+    <h1>Acceso a Mis Tareas - Base de Datos II</h1>
+    <form onsubmit="return validarLogin(event)">
+      <input type="text" id="usuario" placeholder="👤 Usuario" required>
+      <input type="password" id="password" placeholder="🔒 Contraseña" required>
+      <button type="submit">Ingresar</button>
+      <div class="error-msg" id="errorMsg">⚠️ Usuario o contraseña incorrectos</div>
+    </form>
+  </div>
+
+  <script>
+    function validarLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById("usuario").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+
+      // 🔐 Credenciales admin
+      const userValido = "admin";
+      const passValido = "1234";
+
+      if (user === userValido && pass === passValido) {
+        // ✅ Guardamos rol admin
+        localStorage.setItem("userName", "Administrador");
+        localStorage.setItem("isAdmin", "true");
+        window.location.href = "tareas.html"; 
+      } else if (user !== "" && pass !== "") {
+        // 👤 Invitado (usuario normal)
+        localStorage.setItem("userName", user);
+        localStorage.setItem("isAdmin", "false");
+        window.location.href = "tareas.html"; 
+      } else {
+        errorMsg.style.display = "block";
+      }
+    }
+  </script>
+  
+</body>
+</html>

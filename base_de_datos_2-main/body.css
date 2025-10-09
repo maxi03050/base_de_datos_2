@@ -1,0 +1,285 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  margin: 0;
+  padding: 40px 20px;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  margin-bottom: 50px;
+  max-width: 700px;
+}
+
+/* Nuevo: logo */
+header img {
+  width: 120px; /* tamaño del logo */
+  margin-bottom: 20px;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+}
+
+header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+header p {
+  font-size: 1.3rem;
+  font-weight: 500;
+  opacity: 0.9;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* Presentación principal */
+.presentacion-grid {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
+}
+
+.presentacion-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 25px;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.presentacion-card:hover {
+  transform: translateY(-10px) scale(1.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.25); /* un poco más claro */
+}
+
+.presentacion-icon {
+  font-size: 5rem;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.presentacion-card:hover .presentacion-icon {
+  transform: scale(1.2);
+}
+
+.presentacion-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Descripción de trabajos */
+.descripcion-trabajos {
+  max-width: 700px;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  text-align: center;
+  opacity: 0.95;
+  user-select: none;
+  margin-top: 30px;
+}
+
+/* Grid de semanas (para tareas.html) */
+.semanas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 30px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 40px;
+}
+
+/* Tarjeta semana */
+.semana-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 25px 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  min-height: 180px;
+}
+
+.semana-card:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.semana-icon {
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.semana-card:hover .semana-icon {
+  transform: scale(1.2);
+}
+
+.semana-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Botón volver */
+.back-button {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto 30px;
+  box-shadow: 0 6px 15px rgba(76, 175, 80, 0.6);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header img {
+    width: 90px;
+  }
+
+  .presentacion-grid {
+    gap: 40px;
+  }
+  
+  .presentacion-card {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .presentacion-icon {
+    font-size: 4rem;
+  }
+  
+  .presentacion-title {
+    font-size: 1.2rem;
+  }
+  
+  header h1 {
+    font-size: 2.2rem;
+  }
+  
+  header p {
+    font-size: 1rem;
+  }
+  
+  .semanas-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+  }
+  
+  .semana-card {
+    padding: 20px 15px;
+    min-height: 150px;
+  }
+  
+  .semana-icon {
+    font-size: 2.5rem;
+  }
+  
+  .semana-title {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 20px 15px;
+  }
+  
+  .presentacion-grid {
+    gap: 30px;
+  }
+  
+  .presentacion-card {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .presentacion-icon {
+    font-size: 3rem;
+  }
+  
+  .presentacion-title {
+    font-size: 1rem;
+  }
+  
+  .semanas-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .semana-card {
+    min-height: 120px;
+    padding: 15px 10px;
+  }
+  
+  .semana-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .semana-title {
+    font-size: 1rem;
+  }
+}
+/* Nombre del usuario arriba a la derecha */
+.user-name {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  background: #f9f9f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
