@@ -1,17 +1,16 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Semana 9 - Evaluación</title> <!-- 🔹 CAMBIADO -->
+  <title>Semana 9 - Energía</title>
   <style>
-    /* --- ESTILOS GENERALES --- */
     body {
       font-family: "Segoe UI", Roboto, sans-serif;
       margin: 0;
       padding: 0;
       background: linear-gradient(135deg, #3498db, #2c3e50);
-      color: #2c3e50;
+      color: #fff;
     }
 
     .user-name {
@@ -23,6 +22,7 @@
       padding: 6px 12px;
       border-radius: 8px;
       font-size: 14px;
+      color: #2c3e50;
     }
 
     .semana-container {
@@ -34,7 +34,6 @@
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       animation: fadeIn 0.7s ease;
-      color: #fff;
     }
 
     @keyframes fadeIn {
@@ -61,9 +60,9 @@
       margin-bottom: 20px;
       transition: color 0.3s;
     }
+
     .back-button:hover { color: #ffc107; }
 
-    /* --- BOTONES Y FORMULARIO --- */
     .file-input-button {
       background: #1976d2;
       color: #fff;
@@ -74,6 +73,7 @@
       display: inline-block;
       transition: background 0.3s;
     }
+
     .file-input-button:hover { background: #125ea5; }
 
     input[type="file"] { display: none; }
@@ -104,6 +104,7 @@
       text-align: center;
       color: #fff;
     }
+
     .download-btn:hover { background: #6c3483; }
 
     #status {
@@ -111,7 +112,6 @@
       margin-top: 10px;
     }
 
-    /* --- LISTA DE ARCHIVOS --- */
     .work-list {
       border-top: 2px solid rgba(255,255,255,0.2);
       padding-top: 20px;
@@ -167,17 +167,16 @@
   </style>
 </head>
 <body>
-   <div class="user-name">Samuel Max Vega Brañez</div>
+  <div class="user-name" id="userLabel">Invitado</div>
 
-   <div class="semana-container">
+  <div class="semana-container">
     <div class="semana-header">
       <a href="tareas.html" class="back-button">← Volver a Tareas</a>
-      <h1>⚡ Semana 9 - Energía</h1> <!-- 🔹 CAMBIADO -->
+      <h1>⚡ Semana 9 - Energía</h1>
       <p>Sube y gestiona tu trabajo de esta semana</p>
     </div>
 
-    <!-- SUBIR ARCHIVO -->
-    <div class="upload-section">
+    <div class="upload-section" id="uploadSection" style="display:none;">
       <h2>Subir Trabajo</h2>
       <form class="upload-form" id="uploadForm">
         <div class="file-input-wrapper">
@@ -192,37 +191,47 @@
       <p id="status"></p>
     </div>
 
-    <!-- LISTA DE ARCHIVOS -->
     <div class="work-list" id="workList">
       <h2>📂 Archivos Subidos</h2>
       <div id="fileCards"></div>
     </div>
   </div>
 
-  <!-- SUPABASE -->
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-    // Usa la misma URL/KEY que en los otros archivos
     const supabase = createClient(
       "https://sxxayzbfdrxxfrltdirb.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      "TU_PUBLIC_KEY_AQUI"
     );
+
+    const esAdmin = localStorage.getItem("isAdmin") === "true";
+    const userLabel = document.getElementById("userLabel");
+    const uploadSection = document.getElementById("uploadSection");
+
+    if (esAdmin) {
+      userLabel.textContent = "Administrador";
+      uploadSection.style.display = "block";
+    } else {
+      userLabel.textContent = "Invitado";
+      uploadSection.style.display = "none";
+    }
 
     let archivos = [];
 
-    // Mostrar nombre de archivo al seleccionarlo
-    document.getElementById("fileInput").addEventListener("change", (e) => {
+    document.getElementById("fileInput")?.addEventListener("change", (e) => {
       const selectedFile = document.getElementById("selectedFile");
-      if (e.target.files.length > 0) {
-        selectedFile.textContent = `📄 ${e.target.files[0].name}`;
-      } else {
-        selectedFile.textContent = "Ningún archivo seleccionado";
-      }
+      selectedFile.textContent = e.target.files.length
+        ? `📄 ${e.target.files[0].name}`
+        : "Ningún archivo seleccionado";
     });
 
-    // SUBIR ARCHIVO
     async function subirArchivo() {
+      if (!esAdmin) {
+        alert("Solo el administrador puede subir archivos");
+        return;
+      }
+
       const fileInput = document.getElementById("fileInput");
       const status = document.getElementById("status");
 
@@ -232,53 +241,26 @@
       }
 
       const file = fileInput.files[0];
-      const filePath = `entregas/${Date.now()}-${file.name}`;
-
+      const filePath = `semana9/${Date.now()}-${file.name}`;
       status.textContent = "⏳ Subiendo...";
 
-      const { error: uploadError } = await supabase.storage
-        .from("trabajos")
-        .upload(filePath, file);
-
+      const { error: uploadError } = await supabase.storage.from("trabajos").upload(filePath, file);
       if (uploadError) {
         status.textContent = "❌ Error: " + uploadError.message;
         return;
       }
 
-      const { data: publicURL } = supabase.storage
-        .from("trabajos")
-        .getPublicUrl(filePath);
-
-      const { data, error: dbError } = await supabase
-        .from("archivos")
-        .insert([{ 
-          nombre: file.name, 
-          ruta: filePath, 
-          url: publicURL.publicUrl, 
-          semana: "Semana 9"  // 🔹 CAMBIADO
-        }])
-        .select();
-
-      if (dbError) {
-        status.textContent = "❌ Error guardando en base de datos";
-        return;
-      }
+      const { data: publicURL } = supabase.storage.from("trabajos").getPublicUrl(filePath);
+      await supabase.from("archivos").insert([{ nombre: file.name, ruta: filePath, url: publicURL.publicUrl, semana: "Semana 9" }]);
 
       status.textContent = "✅ Archivo subido correctamente";
-      fileInput.value = ""; 
+      fileInput.value = "";
       document.getElementById("selectedFile").textContent = "Ningún archivo seleccionado";
-
       cargarArchivos();
     }
 
-    // LISTAR ARCHIVOS
     async function cargarArchivos() {
-      const { data } = await supabase
-        .from("archivos")
-        .select("*")
-        .eq("semana", "Semana 9") // 🔹 CAMBIADO
-        .order("subido_en", { ascending: false });
-
+      const { data } = await supabase.from("archivos").select("*").eq("semana", "Semana 9").order("subido_en", { ascending: false });
       archivos = data || [];
       mostrarArchivos();
     }
@@ -291,24 +273,16 @@
         const div = document.createElement("div");
         div.className = "file-card";
 
-        // preview
         const img = document.createElement("img");
         img.className = "preview-image";
-        if (archivo.url.match(/\.(jpg|jpeg|png)$/i)) {
-          img.src = archivo.url;
-        } else {
-          img.src = "https://cdn-icons-png.flaticon.com/512/109/109612.png";
-        }
+        img.src = archivo.url.match(/\.(jpg|jpeg|png)$/i)
+          ? archivo.url
+          : "https://cdn-icons-png.flaticon.com/512/109/109612.png";
 
-        // info
         const info = document.createElement("div");
         info.className = "file-info";
-        info.innerHTML = `
-          <div class="file-name">${archivo.nombre}</div>
-          <div class="file-size">${archivo.size ? (archivo.size/1024).toFixed(2)+" KB" : ""}</div>
-        `;
+        info.innerHTML = `<div class="file-name">${archivo.nombre}</div>`;
 
-        // botones
         const buttons = document.createElement("div");
         buttons.className = "action-buttons";
 
@@ -317,31 +291,29 @@
         download.href = archivo.url;
         download.target = "_blank";
         download.textContent = "⬇️ Descargar";
-
-        const del = document.createElement("button");
-        del.className = "delete-btn";
-        del.textContent = "🗑️ Borrar";
-        del.onclick = async () => {
-          if (!confirm("⚠️ ¿Seguro que deseas eliminar este archivo?")) return;
-          await supabase.storage.from("trabajos").remove([archivo.ruta]);
-          await supabase.from("archivos").delete().eq("id", archivo.id);
-          cargarArchivos();
-          document.getElementById("status").textContent = "✅ Archivo eliminado correctamente";
-        };
-
         buttons.appendChild(download);
-        buttons.appendChild(del);
+
+        if (esAdmin) {
+          const del = document.createElement("button");
+          del.className = "delete-btn";
+          del.textContent = "🗑️ Borrar";
+          del.onclick = async () => {
+            if (!confirm("¿Seguro que deseas eliminar este archivo?")) return;
+            await supabase.storage.from("trabajos").remove([archivo.ruta]);
+            await supabase.from("archivos").delete().eq("id", archivo.id);
+            cargarArchivos();
+          };
+          buttons.appendChild(del);
+        }
 
         div.appendChild(img);
         div.appendChild(info);
         div.appendChild(buttons);
-
         container.appendChild(div);
       });
     }
 
     document.addEventListener("DOMContentLoaded", cargarArchivos);
-
     window.subirArchivo = subirArchivo;
   </script>
 </body>

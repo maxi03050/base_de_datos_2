@@ -1,24 +1,29 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Semana 10 - Brillantez</title> <!-- 🔹 CAMBIADO -->
+  <title>Semana 10 - Brillantez</title>
   <style>
     /* --- ESTILOS GENERALES --- */
     body {
       font-family: "Segoe UI", Roboto, sans-serif;
       margin: 0;
       padding: 0;
-      /* degradado nuevo (continuando con cambios de color) */
       background: linear-gradient(135deg, #f6d365, #fda085);
       color: #2c3e50;
     }
 
-    .user-name {
+    .top-bar {
       position: absolute;
       top: 15px;
-      right: 20px;
+      right: 25px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-label {
       font-weight: 600;
       background: rgba(255,255,255,0.9);
       padding: 6px 12px;
@@ -27,9 +32,21 @@
       color: #2c3e50;
     }
 
+    .logout-btn {
+      background: #d9534f;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+    .logout-btn:hover { background: #b52b27; }
+
     .semana-container {
       max-width: 900px;
-      margin: 70px auto;
+      margin: 80px auto;
       background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(12px);
       padding: 30px;
@@ -44,16 +61,8 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .semana-header h1 {
-      margin: 0;
-      font-size: 30px;
-      color: #333;
-    }
-
-    .semana-header p {
-      color: #444;
-      margin-bottom: 25px;
-    }
+    .semana-header h1 { margin: 0; font-size: 30px; color: #333; }
+    .semana-header p { color: #444; margin-bottom: 25px; }
 
     .back-button {
       text-decoration: none;
@@ -65,7 +74,7 @@
     }
     .back-button:hover { color: #000; }
 
-    /* --- BOTONES Y FORMULARIO --- */
+    /* --- BOTONES --- */
     .file-input-button {
       background: #ff7a59;
       color: #fff;
@@ -87,8 +96,8 @@
       font-size: 15px;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s, transform 0.12s;
       color: #fff;
+      transition: background 0.2s, transform 0.12s;
     }
 
     .upload-btn { background: #2ecc71; }
@@ -104,16 +113,12 @@
       padding: 8px 15px;
       border-radius: 8px;
       font-size: 14px;
-      text-align: center;
       color: #fff;
+      text-align: center;
     }
     .download-btn:hover { background: #6c3483; }
 
-    #status {
-      font-weight: 600;
-      margin-top: 10px;
-      color: #2c3e50;
-    }
+    #status { font-weight: 600; margin-top: 10px; color: #2c3e50; }
 
     /* --- LISTA DE ARCHIVOS --- */
     .work-list {
@@ -142,25 +147,11 @@
       background: #fff;
     }
 
-    .file-info {
-      flex: 1;
-    }
+    .file-info { flex: 1; }
+    .file-name { font-weight: 700; font-size: 16px; color: #2c3e50; }
+    .file-size { font-size: 13px; color: #666; }
 
-    .file-name {
-      font-weight: 700;
-      font-size: 16px;
-      color: #2c3e50;
-    }
-
-    .file-size {
-      font-size: 13px;
-      color: #666;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-    }
+    .action-buttons { display: flex; gap: 10px; }
 
     #selectedFile {
       margin-top: 8px;
@@ -169,7 +160,6 @@
       font-style: italic;
     }
 
-    /* responsive */
     @media (max-width: 640px) {
       .semana-container { padding: 18px; margin: 40px 12px; }
       .file-card { flex-direction: column; align-items: stretch; }
@@ -178,26 +168,28 @@
   </style>
 </head>
 <body>
-   <div class="user-name">Samuel Max Vega Brañez</div>
+  <!-- 🔹 Barra superior -->
+  <div class="top-bar">
+    <div class="user-label" id="userLabel">Invitado</div>
+    <button class="logout-btn" id="logoutBtn" style="display:none;">Salir</button>
+  </div>
 
-   <div class="semana-container">
+  <div class="semana-container">
     <div class="semana-header">
       <a href="tareas.html" class="back-button">← Volver a Tareas</a>
-      <h1>🌟 Semana 10 - Brillantez</h1> <!-- ICONO CORREGIDO -->
+      <h1>🌟 Semana 10 - Brillantez</h1>
       <p>Sube y gestiona tu trabajo de esta semana</p>
     </div>
 
     <!-- SUBIR ARCHIVO -->
-    <div class="upload-section">
+    <div class="upload-section" id="adminSection" style="display:none;">
       <h2>Subir Trabajo</h2>
-      <form class="upload-form" id="uploadForm">
-        <div class="file-input-wrapper">
-          <label class="file-input-button">
-            📁 Seleccionar Archivo
-            <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx" />
-          </label>
-          <div id="selectedFile">Ningún archivo seleccionado</div>
-        </div>
+      <form id="uploadForm">
+        <label class="file-input-button">
+          📁 Seleccionar Archivo
+          <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx" />
+        </label>
+        <div id="selectedFile">Ningún archivo seleccionado</div>
         <button type="button" class="upload-btn" onclick="subirArchivo()">📤 Subir Trabajo</button>
       </form>
       <p id="status"></p>
@@ -214,7 +206,6 @@
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-    // usa la misma URL/KEY de siempre
     const supabase = createClient(
       "https://sxxayzbfdrxxfrltdirb.supabase.co",
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -222,73 +213,42 @@
 
     let archivos = [];
 
-    // Mostrar nombre de archivo al seleccionarlo
+    // Mostrar nombre del archivo
     document.getElementById("fileInput").addEventListener("change", (e) => {
       const selectedFile = document.getElementById("selectedFile");
-      if (e.target.files.length > 0) {
-        selectedFile.textContent = `📄 ${e.target.files[0].name}`;
-      } else {
-        selectedFile.textContent = "Ningún archivo seleccionado";
-      }
+      selectedFile.textContent = e.target.files.length
+        ? `📄 ${e.target.files[0].name}`
+        : "Ningún archivo seleccionado";
     });
 
     // SUBIR ARCHIVO
     async function subirArchivo() {
       const fileInput = document.getElementById("fileInput");
       const status = document.getElementById("status");
-
-      if (!fileInput.files.length) {
-        alert("⚠️ Selecciona un archivo primero");
-        return;
-      }
+      if (!fileInput.files.length) return alert("⚠️ Selecciona un archivo primero");
 
       const file = fileInput.files[0];
       const filePath = `entregas/${Date.now()}-${file.name}`;
-
       status.textContent = "⏳ Subiendo...";
 
-      const { error: uploadError } = await supabase.storage
-        .from("trabajos")
-        .upload(filePath, file);
+      const { error: uploadError } = await supabase.storage.from("trabajos").upload(filePath, file);
+      if (uploadError) return (status.textContent = "❌ Error: " + uploadError.message);
 
-      if (uploadError) {
-        status.textContent = "❌ Error: " + uploadError.message;
-        return;
-      }
-
-      const { data: publicURL } = supabase.storage
-        .from("trabajos")
-        .getPublicUrl(filePath);
-
-      const { data, error: dbError } = await supabase
+      const { data: publicURL } = supabase.storage.from("trabajos").getPublicUrl(filePath);
+      const { error: dbError } = await supabase
         .from("archivos")
-        .insert([{ 
-          nombre: file.name, 
-          ruta: filePath, 
-          url: publicURL.publicUrl, 
-          semana: "Semana 10"  // 🔹 CAMBIADO
-        }])
-        .select();
-
-      if (dbError) {
-        status.textContent = "❌ Error guardando en base de datos";
-        return;
-      }
+        .insert([{ nombre: file.name, ruta: filePath, url: publicURL.publicUrl, semana: "Semana 10" }]);
+      if (dbError) return (status.textContent = "❌ Error guardando en base de datos");
 
       status.textContent = "✅ Archivo subido correctamente";
-      fileInput.value = ""; 
+      fileInput.value = "";
       document.getElementById("selectedFile").textContent = "Ningún archivo seleccionado";
       cargarArchivos();
     }
 
     // LISTAR ARCHIVOS
     async function cargarArchivos() {
-      const { data } = await supabase
-        .from("archivos")
-        .select("*")
-        .eq("semana", "Semana 10") // 🔹 CAMBIADO
-        .order("subido_en", { ascending: false });
-
+      const { data } = await supabase.from("archivos").select("*").eq("semana", "Semana 10").order("subido_en", { ascending: false });
       archivos = data || [];
       mostrarArchivos();
     }
@@ -296,29 +256,20 @@
     function mostrarArchivos() {
       const container = document.getElementById("fileCards");
       container.innerHTML = "";
-
       archivos.forEach((archivo) => {
         const div = document.createElement("div");
         div.className = "file-card";
 
-        // preview
         const img = document.createElement("img");
         img.className = "preview-image";
-        if (archivo.url && archivo.url.match(/\.(jpg|jpeg|png)$/i)) {
-          img.src = archivo.url;
-        } else {
-          img.src = "https://cdn-icons-png.flaticon.com/512/109/109612.png";
-        }
+        img.src = archivo.url && archivo.url.match(/\.(jpg|jpeg|png)$/i)
+          ? archivo.url
+          : "https://cdn-icons-png.flaticon.com/512/109/109612.png";
 
-        // info
         const info = document.createElement("div");
         info.className = "file-info";
-        info.innerHTML = `
-          <div class="file-name">${archivo.nombre}</div>
-          <div class="file-size">${archivo.size ? (archivo.size/1024).toFixed(2)+" KB" : ""}</div>
-        `;
+        info.innerHTML = `<div class="file-name">${archivo.nombre}</div>`;
 
-        // botones
         const buttons = document.createElement("div");
         buttons.className = "action-buttons";
 
@@ -327,6 +278,7 @@
         download.href = archivo.url;
         download.target = "_blank";
         download.textContent = "⬇️ Descargar";
+        buttons.appendChild(download);
 
         const del = document.createElement("button");
         del.className = "delete-btn";
@@ -339,18 +291,38 @@
           document.getElementById("status").textContent = "✅ Archivo eliminado correctamente";
         };
 
-        buttons.appendChild(download);
-        buttons.appendChild(del);
+        // Solo admin puede borrar
+        if (localStorage.getItem("isAdmin") === "true") buttons.appendChild(del);
 
         div.appendChild(img);
         div.appendChild(info);
         div.appendChild(buttons);
-
         container.appendChild(div);
       });
     }
 
-    document.addEventListener("DOMContentLoaded", cargarArchivos);
+    document.addEventListener("DOMContentLoaded", () => {
+      const esAdmin = localStorage.getItem("isAdmin") === "true";
+      const userLabel = document.getElementById("userLabel");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const adminSection = document.getElementById("adminSection");
+
+      if (esAdmin) {
+        userLabel.textContent = "Administrador";
+        logoutBtn.style.display = "inline-block";
+        adminSection.style.display = "block";
+      } else {
+        userLabel.textContent = "Invitado";
+      }
+
+      logoutBtn.addEventListener("click", () => {
+        localStorage.setItem("isAdmin", "false");
+        alert("Sesión cerrada. Ahora eres Invitado.");
+        window.location.href = "index.html";
+      });
+
+      cargarArchivos();
+    });
 
     window.subirArchivo = subirArchivo;
   </script>

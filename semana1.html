@@ -39,7 +39,7 @@
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .semana-header h1 {
@@ -164,6 +164,23 @@
       color: #ffeb3b;
       font-style: italic;
     }
+
+    /* --- ENLACE A GITHUB --- */
+    .github-link {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #24292e;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .github-link:hover {
+      background: #0366d6;
+    }
   </style>
 </head>
 <body>
@@ -174,6 +191,13 @@
       <a href="tareas.html" class="back-button">← Volver a Tareas</a>
       <h1>📝 Semana 1 - Planificación</h1>
       <p>Sube y gestiona tu trabajo de esta semana</p>
+
+      <!-- 🔗 Enlace a tu carpeta real de GitHub -->
+      <a href="https://github.com/maxi03050/base_de_datos_2/tree/main/tarea_sem1"
+         target="_blank"
+         class="github-link">
+         🌐 Ver carpeta en GitHub
+      </a>
     </div>
 
     <!-- SUBIR ARCHIVO (solo admin) -->
@@ -209,28 +233,22 @@
     );
 
     let archivos = [];
-    const esAdmin = localStorage.getItem("isAdmin") === "true"; // 🔹 corregido
+    const esAdmin = localStorage.getItem("isAdmin") === "true";
 
-    // Mostrar usuario según rol
     const userNameDiv = document.getElementById("userName");
     userNameDiv.textContent = esAdmin ? "Administrador" : "Invitado";
 
-    // Ocultar sección de subir archivos si no es admin
     if (!esAdmin) {
       document.getElementById("uploadSection").style.display = "none";
     }
 
-    // Mostrar nombre de archivo al seleccionarlo
     document.getElementById("fileInput")?.addEventListener("change", (e) => {
       const selectedFile = document.getElementById("selectedFile");
-      if (e.target.files.length > 0) {
-        selectedFile.textContent = `📄 ${e.target.files[0].name}`;
-      } else {
-        selectedFile.textContent = "Ningún archivo seleccionado";
-      }
+      selectedFile.textContent = e.target.files.length
+        ? `📄 ${e.target.files[0].name}`
+        : "Ningún archivo seleccionado";
     });
 
-    // SUBIR ARCHIVO
     async function subirArchivo() {
       if (!esAdmin) return alert("⚠️ Solo el administrador puede subir archivos");
 
@@ -270,13 +288,12 @@
       }
 
       status.textContent = "✅ Archivo subido correctamente";
-      fileInput.value = ""; 
+      fileInput.value = "";
       document.getElementById("selectedFile").textContent = "Ningún archivo seleccionado";
 
       cargarArchivos();
     }
 
-    // LISTAR ARCHIVOS
     async function cargarArchivos() {
       const { data } = await supabase
         .from("archivos")
@@ -341,7 +358,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", cargarArchivos);
-
     window.subirArchivo = subirArchivo;
   </script>
 </body>

@@ -1,10 +1,11 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Semana 6 - Innovación</title>
   <style>
+    /* --- ESTILOS GENERALES --- */
     body {
       font-family: "Segoe UI", Roboto, sans-serif;
       margin: 0;
@@ -12,6 +13,7 @@
       background: linear-gradient(135deg, #3498db, #2c3e50);
       color: #2c3e50;
     }
+
     .user-name {
       position: absolute;
       top: 15px;
@@ -22,6 +24,7 @@
       border-radius: 8px;
       font-size: 14px;
     }
+
     .semana-container {
       max-width: 900px;
       margin: 70px auto;
@@ -33,16 +36,23 @@
       animation: fadeIn 0.7s ease;
       color: #fff;
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
     .semana-header h1 {
       margin: 0;
       font-size: 30px;
       color: #fff;
     }
-    .semana-header p { color: #f0f0f0; margin-bottom: 25px; }
+
+    .semana-header p {
+      color: #f0f0f0;
+      margin-bottom: 25px;
+    }
+
     .back-button {
       text-decoration: none;
       color: #ffeb3b;
@@ -53,6 +63,7 @@
     }
     .back-button:hover { color: #ffc107; }
 
+    /* --- BOTONES Y FORMULARIO --- */
     .file-input-button {
       background: #1976d2;
       color: #fff;
@@ -64,7 +75,9 @@
       transition: background 0.3s;
     }
     .file-input-button:hover { background: #125ea5; }
+
     input[type="file"] { display: none; }
+
     button {
       border: none;
       padding: 10px 20px;
@@ -74,10 +87,13 @@
       transition: background 0.3s;
       color: #fff;
     }
+
     .upload-btn { background: #27ae60; }
     .upload-btn:hover { background: #1f8a4d; }
+
     .delete-btn { background: #e74c3c; }
     .delete-btn:hover { background: #c0392b; }
+
     .download-btn {
       background: #8e44ad;
       text-decoration: none;
@@ -89,13 +105,19 @@
       color: #fff;
     }
     .download-btn:hover { background: #6c3483; }
-    #status { font-weight: 500; margin-top: 10px; }
 
+    #status {
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    /* --- LISTA DE ARCHIVOS --- */
     .work-list {
       border-top: 2px solid rgba(255,255,255,0.2);
       padding-top: 20px;
       margin-top: 25px;
     }
+
     .file-card {
       display: flex;
       align-items: center;
@@ -106,17 +128,22 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       gap: 15px;
     }
+
     .preview-image {
-      width: 60px; height: 60px;
+      width: 60px;
+      height: 60px;
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.2);
       background: #f9f9f9;
     }
+
     .file-info { flex: 1; }
     .file-name { font-weight: bold; font-size: 16px; color: #fff; }
     .file-size { font-size: 13px; color: #ddd; }
+
     .action-buttons { display: flex; gap: 10px; }
+
     #selectedFile {
       margin-top: 8px;
       font-size: 14px;
@@ -126,7 +153,7 @@
   </style>
 </head>
 <body>
-  <div class="user-name">Samuel Max Vega Brañez</div>
+  <div class="user-name" id="userName">Cargando...</div>
 
   <div class="semana-container">
     <div class="semana-header">
@@ -135,10 +162,10 @@
       <p>Sube y gestiona tu trabajo de esta semana</p>
     </div>
 
-    <!-- SECCIÓN SUBIR ARCHIVOS -->
-    <div class="upload-section" id="adminSection">
+    <!-- SUBIR ARCHIVO (solo admin) -->
+    <div class="upload-section" id="uploadSection">
       <h2>Subir Trabajo</h2>
-      <form id="uploadForm">
+      <form class="upload-form" id="uploadForm">
         <div class="file-input-wrapper">
           <label class="file-input-button">
             📁 Seleccionar Archivo
@@ -152,63 +179,95 @@
     </div>
 
     <!-- LISTA DE ARCHIVOS -->
-    <div class="work-list">
+    <div class="work-list" id="workList">
       <h2>📂 Archivos Subidos</h2>
       <div id="fileCards"></div>
     </div>
   </div>
 
+  <!-- SUPABASE -->
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
     const supabase = createClient(
       "https://sxxayzbfdrxxfrltdirb.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4eGF5emJmZHJ4eGZybHRkaXJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4Mzk2OTMsImV4cCI6MjA3NDQxNTY5M30.xi675-BzW7SQUFhD_5QN0-lLNsnQyF2_FU6lYXB9fqw"
     );
 
+    let archivos = [];
     const esAdmin = localStorage.getItem("isAdmin") === "true";
-    const adminSection = document.getElementById("adminSection");
+
+    // Mostrar usuario según rol
+    const userNameDiv = document.getElementById("userName");
+    userNameDiv.textContent = esAdmin ? "Administrador" : "Invitado";
 
     // Ocultar subida si es invitado
-    if (!esAdmin) adminSection.style.display = "none";
+    if (!esAdmin) document.getElementById("uploadSection").style.display = "none";
 
-    let archivos = [];
-
-    // Mostrar nombre archivo
+    // Mostrar nombre del archivo
     document.getElementById("fileInput")?.addEventListener("change", (e) => {
       const selectedFile = document.getElementById("selectedFile");
-      if (e.target.files.length > 0) selectedFile.textContent = `📄 ${e.target.files[0].name}`;
-      else selectedFile.textContent = "Ningún archivo seleccionado";
+      if (e.target.files.length > 0) {
+        selectedFile.textContent = `📄 ${e.target.files[0].name}`;
+      } else {
+        selectedFile.textContent = "Ningún archivo seleccionado";
+      }
     });
 
+    // SUBIR ARCHIVO
     async function subirArchivo() {
+      if (!esAdmin) return alert("⚠️ Solo el administrador puede subir archivos");
+
       const fileInput = document.getElementById("fileInput");
       const status = document.getElementById("status");
-      if (!fileInput.files.length) return alert("⚠️ Selecciona un archivo primero");
+
+      if (!fileInput.files.length) {
+        alert("⚠️ Selecciona un archivo primero");
+        return;
+      }
 
       const file = fileInput.files[0];
       const filePath = `entregas/${Date.now()}-${file.name}`;
+
       status.textContent = "⏳ Subiendo...";
 
-      const { error: uploadError } = await supabase.storage.from("trabajos").upload(filePath, file);
-      if (uploadError) return status.textContent = "❌ Error: " + uploadError.message;
+      const { error: uploadError } = await supabase.storage
+        .from("trabajos")
+        .upload(filePath, file);
 
-      const { data: publicURL } = supabase.storage.from("trabajos").getPublicUrl(filePath);
+      if (uploadError) {
+        status.textContent = "❌ Error: " + uploadError.message;
+        return;
+      }
 
-      const { error: dbError } = await supabase.from("archivos").insert([
-        { nombre: file.name, ruta: filePath, url: publicURL.publicUrl, semana: "Semana 6" }
-      ]);
+      const { data: publicURL } = supabase.storage
+        .from("trabajos")
+        .getPublicUrl(filePath);
 
-      if (dbError) return status.textContent = "❌ Error guardando en base de datos";
+      const { error: dbError } = await supabase
+        .from("archivos")
+        .insert([{ nombre: file.name, ruta: filePath, url: publicURL.publicUrl, semana: "Semana 6" }]);
+
+      if (dbError) {
+        status.textContent = "❌ Error guardando en base de datos";
+        return;
+      }
+
       status.textContent = "✅ Archivo subido correctamente";
       fileInput.value = "";
       document.getElementById("selectedFile").textContent = "Ningún archivo seleccionado";
+
       cargarArchivos();
     }
 
+    // LISTAR ARCHIVOS
     async function cargarArchivos() {
-      const { data } = await supabase.from("archivos")
-        .select("*").eq("semana", "Semana 6").order("subido_en", { ascending: false });
+      const { data } = await supabase
+        .from("archivos")
+        .select("*")
+        .eq("semana", "Semana 6")
+        .order("subido_en", { ascending: false });
+
       archivos = data || [];
       mostrarArchivos();
     }
@@ -216,6 +275,7 @@
     function mostrarArchivos() {
       const container = document.getElementById("fileCards");
       container.innerHTML = "";
+
       archivos.forEach((archivo) => {
         const div = document.createElement("div");
         div.className = "file-card";
@@ -241,7 +301,6 @@
         download.href = archivo.url;
         download.target = "_blank";
         download.textContent = "⬇️ Descargar";
-
         buttons.appendChild(download);
 
         if (esAdmin) {
