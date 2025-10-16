@@ -99,9 +99,37 @@
     .presentacion-title {
       font-size: 1.2rem;
     }
+
+    /* 🔹 NUEVO: Logo + nombre a la izquierda */
+    .left-bar {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+    }
+    .nombre {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      font-family: 'Poppins', Arial, sans-serif;
+    }
   </style>
 </head>
 <body>
+  <!-- 🔹 Logo + nombre a la izquierda -->
+  <div class="left-bar">
+    <img src="lupla.png" alt="Logo" class="logo" />
+    <span class="nombre">Samuel Vega Brañez</span>
+  </div>
+
   <!-- 🔹 Barra superior -->
   <div class="top-bar">
     <div class="nombre-usuario" id="userLabel">Invitado</div>
