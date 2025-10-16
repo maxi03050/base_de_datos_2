@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="body.css" />
   <script src="java.js" defer></script>
   <style>
+    /* 🔹 Tu estilo original para el usuario */
     .top-bar {
       position: absolute;
       top: 15px;
@@ -31,9 +32,35 @@
       transition: background 0.3s;
     }
     .logout-btn:hover { background: #b52b27; }
+
+    /* 🔹 NUEVO: Logo + nombre a la izquierda */
+    .left-bar {
+      position: absolute;
+      top: 15px;
+      left: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    .nombre {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
+  <!-- 🔹 Logo y nombre a la izquierda -->
+  <div class="left-bar">
+    <img src="lupla.png" alt="Logo" class="logo" />
+    <span class="nombre">Samuel Vega Brañez</span>
+  </div>
+
   <!-- 🔹 Barra superior con usuario y logout -->
   <div class="top-bar">
     <div class="user-label" id="userLabel">Invitado</div>

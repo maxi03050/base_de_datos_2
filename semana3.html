@@ -162,6 +162,23 @@
 
     /* Sección de subida oculta para invitados */
     .upload-section { display: none; }
+   /* ================================
+       🌐 ENLACE A GITHUB
+       ================================ */
+    .github-link {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #24292e;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .github-link:hover {
+      background: #0366d6;
+    }
   </style>
 </head>
 <body>
@@ -172,6 +189,12 @@
       <a href="tareas.html" class="back-button">← Volver a Tareas</a>
       <h1>🔧 Semana 3 - Desarrollo</h1>
       <p>Sube y gestiona tu trabajo de esta semana</p>
+    <!-- Enlace directo al repositorio de GitHub -->
+      <a href="https://github.com/maxi03050/base_de_datos_2/tree/main/tareas%20semanales/tarea_sem3"
+         target="_blank"
+         class="github-link">
+         🌐 Ver carpeta en GitHub
+      </a>
     </div>
 
     <!-- SUBIR ARCHIVO -->
@@ -203,7 +226,7 @@
 
     const supabase = createClient(
       "https://sxxayzbfdrxxfrltdirb.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4eGF5emJmZHJ4eGZybHRkaXJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4Mzk2OTMsImV4cCI6MjA3NDQxNTY5M30.xi675-BzW7SQUFhD_5QN0-lLNsnQyF2_FU6lYXB9fqw"
     );
 
     let archivos = [];
