@@ -1,0 +1,350 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Semana 7 - Optimización</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff6f61, #d35400);
+      color: #2c3e50;
+    }
+
+    .user-name {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.8);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 15px;
+      right: 160px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.3s;
+    }
+    .logout-btn:hover { background: #c0392b; }
+
+    .semana-container {
+      max-width: 900px;
+      margin: 70px auto;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.7s ease;
+      color: #fff;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .semana-header h1 {
+      margin: 0;
+      font-size: 30px;
+      color: #fff;
+    }
+
+    .semana-header p {
+      color: #f0f0f0;
+      margin-bottom: 25px;
+    }
+
+    .back-button {
+      text-decoration: none;
+      color: #ffeb3b;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 20px;
+      transition: color 0.3s;
+    }
+    .back-button:hover { color: #ffc107; }
+
+    .file-input-button {
+      background: #e67e22;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      display: inline-block;
+      transition: background 0.3s;
+    }
+    .file-input-button:hover { background: #ca6f1e; }
+    input[type="file"] { display: none; }
+
+    button {
+      border: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      color: #fff;
+    }
+
+    .upload-btn { background: #27ae60; }
+    .upload-btn:hover { background: #1f8a4d; }
+
+    .delete-btn { background: #e74c3c; }
+    .delete-btn:hover { background: #c0392b; }
+
+    .download-btn {
+      background: #8e44ad;
+      text-decoration: none;
+      display: inline-block;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      color: #fff;
+    }
+    .download-btn:hover { background: #6c3483; }
+
+    #status {
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    .work-list {
+      border-top: 2px solid rgba(255,255,255,0.2);
+      padding-top: 20px;
+      margin-top: 25px;
+    }
+
+    .file-card {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      gap: 15px;
+    }
+
+    .preview-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: #f9f9f9;
+    }
+
+    .file-info { flex: 1; }
+    .file-name { font-weight: bold; font-size: 16px; color: #fff; }
+    .file-size { font-size: 13px; color: #ddd; }
+    .action-buttons { display: flex; gap: 10px; }
+    #selectedFile { margin-top: 8px; font-size: 14px; color: #ffeb3b; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="user-name" id="userLabel">Invitado</div>
+  <button class="logout-btn" id="logoutBtn" style="display:none;">Salir</button>
+
+  <div class="semana-container">
+    <div class="semana-header">
+      <a href="tareas.html" class="back-button">← Volver a Tareas</a>
+      <h1>🎯 Semana 7 - Optimización</h1>
+      <p>Sube y gestiona tu trabajo de esta semana</p>
+    </div>
+
+    <div class="upload-section" id="uploadSection" style="display:none;">
+      <h2>Subir Trabajo</h2>
+      <form class="upload-form" id="uploadForm">
+        <div class="file-input-wrapper">
+          <label class="file-input-button">
+            📁 Seleccionar Archivo
+            <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.ppt,.pptx" />
+          </label>
+          <div id="selectedFile">Ningún archivo seleccionado</div>
+        </div>
+        <button type="button" class="upload-btn" onclick="subirArchivo()">📤 Subir Trabajo</button>
+      </form>
+      <p id="status"></p>
+    </div>
+
+    <div class="work-list" id="workList">
+      <h2>📂 Archivos Subidos</h2>
+      <div id="fileCards"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabase = createClient(
+      "https://sxxayzbfdrxxfrltdirb.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    );
+
+    const esAdmin = localStorage.getItem("isAdmin") === "true";
+    const userName = localStorage.getItem("userName") || "Invitado";
+
+    const userLabel = document.getElementById("userLabel");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const uploadSection = document.getElementById("uploadSection");
+
+    if (esAdmin) {
+      userLabel.textContent = "Administrador";
+      uploadSection.style.display = "block";
+      logoutBtn.style.display = "inline-block";
+    } else {
+      userLabel.textContent = userName || "Invitado";
+      uploadSection.style.display = "none";
+    }
+
+    logoutBtn.addEventListener("click", () => {
+      localStorage.setItem("isAdmin", "false");
+      localStorage.removeItem("userName");
+      alert("Sesión cerrada. Ahora eres Invitado.");
+      window.location.href = "index.html";
+    });
+
+    let archivos = [];
+
+    document.getElementById("fileInput").addEventListener("change", (e) => {
+      const selectedFile = document.getElementById("selectedFile");
+      selectedFile.textContent = e.target.files.length
+        ? `📄 ${e.target.files[0].name}`
+        : "Ningún archivo seleccionado";
+    });
+
+    async function subirArchivo() {
+      const fileInput = document.getElementById("fileInput");
+      const status = document.getElementById("status");
+
+      if (!esAdmin) {
+        alert("Solo el administrador puede subir archivos.");
+        return;
+      }
+
+      if (!fileInput.files.length) {
+        alert("⚠️ Selecciona un archivo primero");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const filePath = `entregas/${Date.now()}-${file.name}`;
+
+      status.textContent = "⏳ Subiendo...";
+
+      const { error: uploadError } = await supabase.storage
+        .from("trabajos")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        status.textContent = "❌ Error: " + uploadError.message;
+        return;
+      }
+
+      const { data: publicURL } = supabase.storage
+        .from("trabajos")
+        .getPublicUrl(filePath);
+
+      const { error: dbError } = await supabase
+        .from("archivos")
+        .insert([{ 
+          nombre: file.name, 
+          ruta: filePath, 
+          url: publicURL.publicUrl, 
+          semana: "Semana 7"
+        }]);
+
+      if (dbError) {
+        status.textContent = "❌ Error guardando en base de datos";
+        return;
+      }
+
+      status.textContent = "✅ Archivo subido correctamente";
+      fileInput.value = ""; 
+      document.getElementById("selectedFile").textContent = "Ningún archivo seleccionado";
+      cargarArchivos();
+    }
+
+    async function cargarArchivos() {
+      const { data } = await supabase
+        .from("archivos")
+        .select("*")
+        .eq("semana", "Semana 7")
+        .order("subido_en", { ascending: false });
+
+      archivos = data || [];
+      mostrarArchivos();
+    }
+
+    function mostrarArchivos() {
+      const container = document.getElementById("fileCards");
+      container.innerHTML = "";
+
+      archivos.forEach((archivo) => {
+        const div = document.createElement("div");
+        div.className = "file-card";
+
+        const img = document.createElement("img");
+        img.className = "preview-image";
+        img.src = archivo.url.match(/\.(jpg|jpeg|png)$/i)
+          ? archivo.url
+          : "https://cdn-icons-png.flaticon.com/512/109/109612.png";
+
+        const info = document.createElement("div");
+        info.className = "file-info";
+        info.innerHTML = `
+          <div class="file-name">${archivo.nombre}</div>
+          <div class="file-size">${archivo.size ? (archivo.size/1024).toFixed(2)+" KB" : ""}</div>
+        `;
+
+        const buttons = document.createElement("div");
+        buttons.className = "action-buttons";
+
+        const download = document.createElement("a");
+        download.className = "download-btn";
+        download.href = archivo.url;
+        download.target = "_blank";
+        download.textContent = "⬇️ Descargar";
+
+        if (esAdmin) {
+          const del = document.createElement("button");
+          del.className = "delete-btn";
+          del.textContent = "🗑️ Borrar";
+          del.onclick = async () => {
+            if (!confirm("⚠️ ¿Seguro que deseas eliminar este archivo?")) return;
+            await supabase.storage.from("trabajos").remove([archivo.ruta]);
+            await supabase.from("archivos").delete().eq("id", archivo.id);
+            cargarArchivos();
+            document.getElementById("status").textContent = "✅ Archivo eliminado correctamente";
+          };
+          buttons.appendChild(del);
+        }
+
+        buttons.appendChild(download);
+        div.appendChild(img);
+        div.appendChild(info);
+        div.appendChild(buttons);
+        container.appendChild(div);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", cargarArchivos);
+    window.subirArchivo = subirArchivo;
+  </script>
+</body>
+</html>

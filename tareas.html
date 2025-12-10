@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mis Tareas Semanales</title>
+  <link rel="stylesheet" href="body.css" />
+  <script src="java.js" defer></script>
+  <style>
+    /* 🔹 Tu estilo original para el usuario */
+    .top-bar {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .user-label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
+    .logout-btn {
+      background: #d9534f;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+    .logout-btn:hover { background: #b52b27; }
+
+    /* 🔹 NUEVO: Logo + nombre a la izquierda */
+    .left-bar {
+      position: absolute;
+      top: 15px;
+      left: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    .nombre {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔹 Logo y nombre a la izquierda -->
+  <div class="left-bar">
+    <img src="lupla.png" alt="Logo" class="logo" />
+    <span class="nombre">Samuel Vega Brañez</span>
+  </div>
+
+  <!-- 🔹 Barra superior con usuario y logout -->
+  <div class="top-bar">
+    <div class="user-label" id="userLabel">Invitado</div>
+    <button class="logout-btn" id="logoutBtn" style="display:none;">Salir</button>
+  </div>
+
+  <header>
+    <h1>🗂️ Mis Tareas Semanales</h1>
+    <p>Selecciona la semana para ver tus trabajos</p>
+  </header>
+
+  <main>
+    <div class="semanas-grid" id="semanasContainer"></div>
+    <a href="index.html" class="back-button">← Volver a Inicio</a>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const esAdmin = localStorage.getItem("isAdmin") === "true";
+      const userLabel = document.getElementById("userLabel");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (esAdmin) {
+        userLabel.textContent = "Administrador";
+        logoutBtn.style.display = "inline-block";
+      } else {
+        userLabel.textContent = "Invitado";
+        logoutBtn.style.display = "none";
+      }
+
+      // 🔹 Cerrar sesión
+      logoutBtn.addEventListener("click", () => {
+        localStorage.setItem("isAdmin", "false");
+        localStorage.removeItem("userName");
+        alert("Sesión cerrada. Ahora eres Invitado.");
+        window.location.href = "index.html";
+      });
+    });
+  </script>
+</body>
+</html>

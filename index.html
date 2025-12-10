@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portafolio Samuel - UPLA</title>
+  <link rel="stylesheet" href="body.css" />
+  <style>
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header img {
+      max-width: 120px;
+      margin-bottom: 15px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.85;
+    }
+
+    /* 🔹 Barra superior con rol y logout */
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .nombre-usuario {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: none;
+      transition: background 0.3s;
+    }
+    .logout-btn:hover { background: #c0392b; }
+
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      color: #eee;
+    }
+
+    /* 🔹 Grid de tarjetas */
+    .presentacion-grid {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .presentacion-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+      transition: 0.3s;
+      width: 120px;
+      cursor: pointer;
+    }
+
+    .presentacion-card:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .presentacion-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .presentacion-title {
+      font-size: 1.2rem;
+    }
+
+    /* 🔹 NUEVO: Logo + nombre a la izquierda */
+    .left-bar {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+    }
+    .nombre {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔹 Logo + nombre a la izquierda -->
+  <div class="left-bar">
+    <img src="lupla.png" alt="Logo" class="logo" />
+    <span class="nombre">Samuel Vega Brañez</span>
+  </div>
+
+  <!-- 🔹 Barra superior -->
+  <div class="top-bar">
+    <div class="nombre-usuario" id="userLabel">Invitado</div>
+    <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+  </div>
+
+  <header>
+    <img src="lupla.png" alt="Logo oficial de UPLA">
+    <h1>📚 Mi Portafolio de Trabajos</h1>
+    <p>Bienvenido a mi portafolio. Aquí encontrarás una breve descripción de mis trabajos realizados durante el curso.</p>
+  </header>
+
+  <main>
+    <div class="presentacion-grid">
+      <!-- 📂 Botón de tareas (fuerza invitado) -->
+      <div class="presentacion-card" onclick="entrarComoInvitado()">
+        <div class="presentacion-icon">📂</div>
+        <div class="presentacion-title">Tareas</div>
+      </div>
+
+      <!-- 🔑 Botón de login (solo invitado) -->
+      <a href="login.html" class="presentacion-card solo-invitado" aria-label="Ir al login">
+        <div class="presentacion-icon">🔑</div>
+        <div class="presentacion-title">Login</div>
+      </a>      
+
+      <!-- 👤 Botón de perfil (todos) -->
+      <a href="perfil.html" class="presentacion-card" aria-label="Ir al perfil">
+        <div class="presentacion-icon">👤</div>
+        <div class="presentacion-title">Perfil</div>
+      </a>
+
+      <!-- ⚙️ Botones solo admin -->
+      <a href="subir.html" class="presentacion-card admin-only" aria-label="Subir tareas">
+        <div class="presentacion-icon">📤</div>
+        <div class="presentacion-title">Subir</div>
+      </a>
+      <a href="editar.html" class="presentacion-card admin-only" aria-label="Editar tareas">
+        <div class="presentacion-icon">✏️</div>
+        <div class="presentacion-title">Editar</div>
+      </a>
+    </div>
+
+    <section class="descripcion-trabajos">
+      <h2>Sobre mis trabajos</h2>
+      <p>
+        Durante 14 semanas he desarrollado diversos proyectos y tareas que abarcan desde la planificación, diseño, desarrollo, hasta la implementación y optimización. Cada semana representa un avance significativo en mis habilidades y conocimientos.
+      </p>
+      <p>
+        Puedes navegar a la sección de <strong>Tareas</strong> para acceder a cada semana y revisar los trabajos correspondientes. 
+        Si eres administrador, inicia sesión en <strong>Login</strong> para poder subir o editar los archivos.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Samuel Vega - Universidad Peruana Los Andes</p>
+  </footer>
+
+  <script>
+    // 🔹 Forzar invitado al entrar por tareas
+    function entrarComoInvitado() {
+      localStorage.setItem("esAdmin", "false");
+      window.location.href = "tareas.html";
+    }
+
+    function verificarRol() {
+      const esAdmin = localStorage.getItem("esAdmin");
+      const userLabel = document.getElementById("userLabel");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (esAdmin === "true") {
+        // Admin
+        userLabel.textContent = "Administrador";
+        logoutBtn.style.display = "inline-block";
+        document.querySelectorAll(".admin-only").forEach(el => el.style.display = "inline-block");
+        document.querySelectorAll(".solo-invitado").forEach(el => el.style.display = "none");
+      } else {
+        // Invitado
+        userLabel.textContent = "Invitado";
+        logoutBtn.style.display = "none";
+        document.querySelectorAll(".admin-only").forEach(el => el.style.display = "none");
+        document.querySelectorAll(".solo-invitado").forEach(el => el.style.display = "inline-block");
+      }
+    }
+
+    function cerrarSesion() {
+      localStorage.setItem("esAdmin", "false");
+      verificarRol();
+      alert("Sesión cerrada. Ahora eres Invitado.");
+    }
+
+    // Inicializar
+    window.onload = () => {
+      verificarRol();
+      document.getElementById("logoutBtn").addEventListener("click", cerrarSesion);
+    };
+  </script>
+</body>
+</html>
