@@ -138,9 +138,7 @@
       background: #f9f9f9;
     }
 
-    .file-info {
-      flex: 1;
-    }
+    .file-info { flex: 1; }
 
     .file-name {
       font-weight: bold;
@@ -174,6 +172,22 @@
       <a href="tareas.html" class="back-button">← Volver a Tareas</a>
       <h1>⚡ Semana 9 - Energía</h1>
       <p>Sube y gestiona tu trabajo de esta semana</p>
+      <a href="https://github.com/maxi03050/base_de_datos_2/tree/main/tareas%20semanales/tarea_sem9"
+   target="_blank"
+   style="
+     display:inline-block;
+     margin-top:15px;
+     padding:10px 20px;
+     background:#24292e;
+     color:#fff;
+     text-decoration:none;
+     border-radius:10px;
+     font-weight:bold;
+     transition:0.3s;
+   ">
+   🌐 Ver carpeta en GitHub
+</a>
+
     </div>
 
     <div class="upload-section" id="uploadSection" style="display:none;">
@@ -202,7 +216,7 @@
 
     const supabase = createClient(
       "https://sxxayzbfdrxxfrltdirb.supabase.co",
-      "TU_PUBLIC_KEY_AQUI"
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4eGF5emJmZHJ4eGZybHRkaXJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4Mzk2OTMsImV4cCI6MjA3NDQxNTY5M30.xi675-BzW7SQUFhD_5QN0-lLNsnQyF2_FU6lYXB9fqw"
     );
 
     const esAdmin = localStorage.getItem("isAdmin") === "true";
@@ -251,7 +265,13 @@
       }
 
       const { data: publicURL } = supabase.storage.from("trabajos").getPublicUrl(filePath);
-      await supabase.from("archivos").insert([{ nombre: file.name, ruta: filePath, url: publicURL.publicUrl, semana: "Semana 9" }]);
+      await supabase.from("archivos").insert([{
+        nombre: file.name,
+        ruta: filePath,
+        url: publicURL.publicUrl,
+        size: file.size,
+        semana: "Semana 9"
+      }]);
 
       status.textContent = "✅ Archivo subido correctamente";
       fileInput.value = "";
@@ -260,7 +280,12 @@
     }
 
     async function cargarArchivos() {
-      const { data } = await supabase.from("archivos").select("*").eq("semana", "Semana 9").order("subido_en", { ascending: false });
+      const { data } = await supabase
+        .from("archivos")
+        .select("*")
+        .eq("semana", "Semana 9")
+        .order("subido_en", { ascending: false });
+
       archivos = data || [];
       mostrarArchivos();
     }
@@ -281,7 +306,10 @@
 
         const info = document.createElement("div");
         info.className = "file-info";
-        info.innerHTML = `<div class="file-name">${archivo.nombre}</div>`;
+        info.innerHTML = `
+          <div class="file-name">${archivo.nombre}</div>
+          <div class="file-size">${archivo.size ? (archivo.size/1024).toFixed(2) + " KB" : ""}</div>
+        `;
 
         const buttons = document.createElement("div");
         buttons.className = "action-buttons";
@@ -301,6 +329,7 @@
             if (!confirm("¿Seguro que deseas eliminar este archivo?")) return;
             await supabase.storage.from("trabajos").remove([archivo.ruta]);
             await supabase.from("archivos").delete().eq("id", archivo.id);
+            document.getElementById("status").textContent = "✅ Archivo eliminado correctamente";
             cargarArchivos();
           };
           buttons.appendChild(del);
